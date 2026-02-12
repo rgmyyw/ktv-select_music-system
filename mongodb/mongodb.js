@@ -8,11 +8,14 @@
 */ 
 
 const mongoose = require("mongoose");
+
+// 设置Mongoose选项以避免警告
+mongoose.set('strictQuery', false);
+
 const mongodbURI = require("../secret/mongodbURI").mongodbURI;
 
 mongoose.connect(mongodbURI, {
     useNewUrlParser:true,
-    useFindAndModify:false,
     useUnifiedTopology: true
 }).then(() => {
     console.log(`Mongodb is Connected.Please have a great coding.`);

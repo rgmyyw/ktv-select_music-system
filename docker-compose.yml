@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:5
+    container_name: ktv-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - ktv-network
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ktv-server
+    ports:
+      - "8633:8633"
+    depends_on:
+      - mongodb
+    environment:
+      - NODE_ENV=production
+    networks:
+      - ktv-network
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    container_name: ktv-admin
+    ports:
+      - "8634:80"
+    depends_on:
+      - server
+    networks:
+      - ktv-network
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: ktv-client
+    ports:
+      - "8635:80"
+    depends_on:
+      - server
+    networks:
+      - ktv-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+
+networks:
+  ktv-network:
+    driver: bridge

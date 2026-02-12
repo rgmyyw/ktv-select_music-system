@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 module.exports = {
   devServer: {
-    port: 8635, // 客户端运行在8635端口
+    port: 8634, // 管理员面板运行在8634端口
   },
   configureWebpack: {
     plugins: [
